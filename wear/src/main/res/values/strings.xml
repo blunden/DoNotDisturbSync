@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Do Not Disturb Sync</string>
+    <string name="activity_info">Having launched this app once allows it to monitor Do Not Disturb mode changes.</string>
+    <string name="icon_hidden_info">The app icon will now be hidden from the launcher as there is no need to launch it manually again.</string>
+
+</resources>

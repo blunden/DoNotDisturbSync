@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    // Allows you to reference product flavors in your
+    // phone module's build.gradle file
+    publishNonDefault true
+
+    defaultConfig {
+        applicationId "se.blunden.donotdisturbsync"
+        minSdkVersion 25
+        targetSdkVersion 25
+        versionCode 24100
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        wear1 {
+            // Use the defaultConfig value
+        }
+        wear2 {
+            minSdkVersion 25
+            versionCode 25100
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.android.support:wearable:2.0.1'
+    compile 'com.google.android.gms:play-services-wearable:10.2.4'
+}
