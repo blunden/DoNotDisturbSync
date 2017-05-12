@@ -20,9 +20,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private static final String TAG = "DndSync";
