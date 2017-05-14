@@ -49,7 +49,6 @@ public class DummyNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         // Override this method to be explicit that we don't eavesdrop on notifications
-        // even if users have enabled the
     }
 
     private void disableServiceComponent() {
