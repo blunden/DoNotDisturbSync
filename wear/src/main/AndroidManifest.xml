@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="se.blunden.donotdisturbsync">
 
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
@@ -41,6 +43,14 @@
         <service
             android:name=".WearMessageSenderService"
             android:exported="false">
+        </service>
+
+        <!-- A workaround used to be able to set the permissions we need. Is later disabled. -->
+        <service android:name=".DummyNotificationListener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
         </service>
 
         <activity

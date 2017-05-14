@@ -16,6 +16,11 @@
 
 package se.blunden.donotdisturbsync;
 
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.wearable.MessageEvent;
@@ -40,9 +45,38 @@ public class WearMessageListenerService extends WearableListenerService {
                 Log.d(TAG, "Received new dnd mode " + newMode + " from source " + messageEvent.getSourceNodeId());
             }
 
-            Log.d(TAG, "Apps are not allowed to change Do Not Disturb mode on Android Wear at present");
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            // Check if the notification policy access has been granted for the app
+            // This is needed to set modes that affect Do Not Disturb in Android N
+            if (mNotificationManager.isNotificationPolicyAccessGranted()) {
+                if (SEND_RINGER_MODE) {
+                    Log.d(TAG, "Attempting to set ringer mode " + newMode);
+
+                    AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+                    if (newMode == AudioManager.RINGER_MODE_SILENT) {
+                        audioManager.setRingerMode(newMode);
+                    } else {
+                        // Set the saved "normal" value
+                        audioManager.setRingerMode(getNormalRingerMode());
+                    }
+                } else {
+                    Log.d(TAG, "Attempting to set dnd mode " + newMode);
+
+                    mNotificationManager.setInterruptionFilter(newMode);
+                }
+            } else {
+                Log.d(TAG, "App is not allowed to change Do Not Disturb mode without applying workaround");
+            }
         } else {
             super.onMessageReceived(messageEvent);
         }
+    }
+
+    private int getNormalRingerMode() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPreferences.getInt("normalMode", 1);
     }
 }

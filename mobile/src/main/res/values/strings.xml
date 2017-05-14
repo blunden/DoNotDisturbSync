@@ -3,4 +3,5 @@
     <string name="activity_info">Having launched this app once allows it to monitor Do Not Disturb mode changes.\n\nPlease launch the watch app once too.</string>
     <string name="activity_permission_info">A special permission is needed to set the Do Not Disturb mode.</string>
     <string name="button_grant_permission">Grant permission</string>
+    <string name="activity_phone_to_watch_sync">To enable Do Not Disturb Sync from Phone to Watch, please read the Play Store description.</string>
 </resources>
