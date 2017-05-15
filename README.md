@@ -7,10 +7,12 @@ the Android Wear 1.5 behaviour with minimal or no battery life impact.
 
 Version 1.1 of the app optionally adds support for full bi-directional
 sync. To enable phone to watch sync, users need to manually set the app
-as a notification listener on the watch by running the following command:
+as a notification listener **on the watch** by running the following commands:
 
 ```sh
-$ adb shell settings put secure enabled_notification_listeners com.google.android.wearable.app/com.google.android.clockwork.stream.NotificationCollectorService:se.blunden.donotdisturbsync/se.blunden.donotdisturbsync.DummyNotificationListener
+$ adb shell
+
+$ settings put secure enabled_notification_listeners com.google.android.wearable.app/com.google.android.clockwork.stream.NotificationCollectorService:se.blunden.donotdisturbsync/se.blunden.donotdisturbsync.DummyNotificationListener
 ```
 
 **NOTE:** If you have already manually added other notification listeners
