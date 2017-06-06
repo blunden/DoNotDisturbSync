@@ -12,8 +12,8 @@ android {
         applicationId "se.blunden.donotdisturbsync"
         minSdkVersion 25
         targetSdkVersion 25
-        versionCode 24110
-        versionName "1.1"
+        versionCode 24120
+        versionName "1.2"
     }
     buildTypes {
         release {
@@ -27,7 +27,7 @@ android {
         }
         wear2 {
             minSdkVersion 25
-            versionCode 25110
+            versionCode 25120
         }
     }
 }
