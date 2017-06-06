@@ -16,10 +16,13 @@
 
 package se.blunden.donotdisturbsync;
 
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +55,28 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Launching permissions settings activity on the device");
 
         Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-        startActivity(intent);
+
+        try {
+            // Some devices may not have this activity it seems
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            showNeutralDialog(R.string.error_no_permission_activity);
+
+            Log.e(TAG, "Failed to open the Do Not Disturb access settings");
+        }
+    }
+
+    private void showNeutralDialog(@android.support.annotation.StringRes int messageResId) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage(messageResId)
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+
+        dialog.show();
     }
 }

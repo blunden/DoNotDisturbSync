@@ -17,6 +17,7 @@
 package se.blunden.donotdisturbsync;
 
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -73,7 +74,13 @@ public class WearMessageListenerService extends WearableListenerService {
                 Log.i(TAG, "Launching permissions settings activity on the device");
                 Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+
+                try {
+                    // Some devices may not have this activity it seems
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Log.e(TAG, "Failed to open the Do Not Disturb access settings");
+                }
             }
         } else {
             super.onMessageReceived(messageEvent);

@@ -4,4 +4,5 @@
     <string name="activity_permission_info">A special permission is needed to set the Do Not Disturb mode.</string>
     <string name="button_grant_permission">Grant permission</string>
     <string name="activity_phone_to_watch_sync">To enable Do Not Disturb Sync from Phone to Watch, please read the Play Store description.</string>
+    <string name="error_no_permission_activity">Failed to open the Do Not Disturb Access settings. Please enable the permission manually.</string>
 </resources>
