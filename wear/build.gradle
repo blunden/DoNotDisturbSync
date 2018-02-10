@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     // Allows you to reference product flavors in your
     // phone module's build.gradle file
@@ -21,19 +21,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "default"
+
     productFlavors {
         wear1 {
             // Use the defaultConfig value
+            dimension "default"
         }
         wear2 {
             minSdkVersion 25
             versionCode 25120
+            dimension "default"
         }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.support:wearable:2.0.1'
-    compile 'com.google.android.gms:play-services-wearable:10.2.4'
+    compile 'com.google.android.support:wearable:2.2.0'
+    compile 'com.google.android.gms:play-services-wearable:11.8.0'
+    provided 'com.google.android.wearable:wearable:2.2.0'
 }
