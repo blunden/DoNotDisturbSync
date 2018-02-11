@@ -39,7 +39,7 @@ public class DNDStatusChangedReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(AudioManager.RINGER_MODE_CHANGED_ACTION)) {
             Log.d(TAG, "Received a RINGER_MODE_CHANGED");
 
-            if (mPreferences.getBoolean("use_ringer_mode", true)) {
+            if (mPreferences.getBoolean("use_ringer_mode", false)) {
                 AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
                 int deviceRingerMode = audioManager.getRingerMode();

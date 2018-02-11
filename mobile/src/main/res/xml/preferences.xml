@@ -16,15 +16,15 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="basic_settings_category"
-        android:title="@string/settings_category_basic_settings">
+        android:key="debug_settings_category"
+        android:title="@string/settings_category_debug_settings">
 
         <SwitchPreference
             android:key="use_ringer_mode"
             android:title="@string/settings_use_ringer_mode_title"
             android:summaryOn="@string/settings_use_ringer_mode_on_description"
             android:summaryOff="@string/settings_use_ringer_mode_off_description"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
 
     </PreferenceCategory>
 

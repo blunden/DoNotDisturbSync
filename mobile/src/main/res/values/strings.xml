@@ -9,10 +9,10 @@
     <string name="action_settings">Settings</string>
 
     <string name="settings_category_phone_settings">Phone settings</string>
-    <string name="settings_category_basic_settings">Basic settings</string>
+    <string name="settings_category_debug_settings">Debug settings</string>
     <string name="settings_use_ringer_mode_title">Use ringer mode</string>
-    <string name="settings_use_ringer_mode_on_description">Sets DND mode by changing Ringer mode (default)</string>
-    <string name="settings_use_ringer_mode_off_description">Sets DND mode by changing the true DND mode (may cause unexpected behavior)</string>
+    <string name="settings_use_ringer_mode_on_description">Set DND mode by changing Ringer mode (old default)</string>
+    <string name="settings_use_ringer_mode_off_description">Set DND mode by changing Notification filter (default)</string>
     <string name="settings_preferred_dnd_mode_title">Preferred Do Not Disturb mode</string>
     <string name="settings_preferred_dnd_mode_summary">Set phone to %1$s mode when Do Not Disturb is toggled on the watch</string>
 

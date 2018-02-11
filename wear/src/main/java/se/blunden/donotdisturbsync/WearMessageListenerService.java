@@ -41,7 +41,7 @@ public class WearMessageListenerService extends WearableListenerService {
             // Read the received ringer or dnd mode and convert it back to an integer
             int newMode = Integer.parseInt(new String(messageEvent.getData()));
 
-            if (mPreferences.getBoolean("use_ringer_mode", true)) {
+            if (mPreferences.getBoolean("use_ringer_mode", false)) {
                 Log.d(TAG, "Received new ringer mode " + newMode + " from source " + messageEvent.getSourceNodeId());
             } else {
                 Log.d(TAG, "Received new dnd mode " + newMode + " from source " + messageEvent.getSourceNodeId());
@@ -52,7 +52,7 @@ public class WearMessageListenerService extends WearableListenerService {
             // Check if the notification policy access has been granted for the app
             // This is needed to set modes that affect Do Not Disturb in Android N
             if (mNotificationManager.isNotificationPolicyAccessGranted()) {
-                if (mPreferences.getBoolean("use_ringer_mode", true)) {
+                if (mPreferences.getBoolean("use_ringer_mode", false)) {
                     Log.d(TAG, "Attempting to set ringer mode " + newMode);
 
                     AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
