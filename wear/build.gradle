@@ -8,8 +8,8 @@ android {
         applicationId "se.blunden.donotdisturbsync"
         minSdkVersion 23
         targetSdkVersion 25
-        versionCode 25121
-        versionName "1.2.1"
+        versionCode 25130
+        versionName "1.3"
     }
     buildTypes {
         release {
