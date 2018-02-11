@@ -76,6 +76,11 @@ public class WearMessageListenerService extends WearableListenerService {
                         return;
                     }
 
+                    if (newMode < 1) {
+                        Log.i(TAG, "Received an invalid notification interruption filter: " + newMode);
+                        return;
+                    }
+
                     // Android Wear's DND modes behave unexpectedly so toggle user preferred mode or off instead
                     if (newMode != NotificationManager.INTERRUPTION_FILTER_ALL) {
                         newMode = Integer.parseInt(mPreferences.getString("preferred_phone_dnd_mode",
