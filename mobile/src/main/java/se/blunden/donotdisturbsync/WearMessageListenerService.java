@@ -96,6 +96,6 @@ public class WearMessageListenerService extends WearableListenerService {
     }
 
     private int getNormalRingerMode() {
-        return mPreferences.getInt("normalMode", 2);
+        return mPreferences.getInt("normalMode", AudioManager.RINGER_MODE_NORMAL);
     }
 }
