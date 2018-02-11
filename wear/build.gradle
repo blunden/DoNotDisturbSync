@@ -4,34 +4,17 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
 
-    // Allows you to reference product flavors in your
-    // phone module's build.gradle file
-    publishNonDefault true
-
     defaultConfig {
         applicationId "se.blunden.donotdisturbsync"
-        minSdkVersion 25
+        minSdkVersion 23
         targetSdkVersion 25
-        versionCode 24120
+        versionCode 25120
         versionName "1.2"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    flavorDimensions "default"
-
-    productFlavors {
-        wear1 {
-            // Use the defaultConfig value
-            dimension "default"
-        }
-        wear2 {
-            minSdkVersion 25
-            versionCode 25120
-            dimension "default"
         }
     }
 }
