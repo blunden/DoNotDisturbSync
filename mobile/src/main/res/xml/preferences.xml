@@ -2,6 +2,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:key="phone_settings_category"
+        android:title="@string/settings_category_phone_settings">
+
+        <ListPreference
+            android:key="preferred_phone_dnd_mode"
+            android:title="@string/settings_preferred_dnd_mode_title"
+            android:summary="@string/settings_preferred_dnd_mode_summary"
+            android:defaultValue="4"
+            android:entries="@array/dnd_mode_names"
+            android:entryValues="@array/dnd_mode_values" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="basic_settings_category"
         android:title="@string/settings_category_basic_settings">
 

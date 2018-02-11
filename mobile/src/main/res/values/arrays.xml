@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="dnd_mode_names">
+        <item name="alarms_only">Alarms only</item>
+        <item name="priority">Priority</item>
+        <item name="none">Total silence</item>
+    </string-array>
+
+    <string-array name="dnd_mode_values">
+        <item name="alarms_only">4</item>
+        <item name="priority">2</item>
+        <item name="none">3</item>
+    </string-array>
+
+</resources>

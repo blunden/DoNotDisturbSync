@@ -64,8 +64,14 @@ public class WearMessageListenerService extends WearableListenerService {
                         audioManager.setRingerMode(getNormalRingerMode());
                     }
                 } else {
-                    Log.d(TAG, "Attempting to set dnd mode " + newMode);
+                    // Android Wear's DND modes behave unexpectedly so toggle Alarms Only or Off instead
+                    if (newMode != NotificationManager.INTERRUPTION_FILTER_ALL) {
+                        newMode = NotificationManager.INTERRUPTION_FILTER_ALARMS;
+                    } else {
+                        newMode = NotificationManager.INTERRUPTION_FILTER_ALL;
+                    }
 
+                    Log.d(TAG, "Attempting to set adjusted dnd mode " + newMode);
                     mNotificationManager.setInterruptionFilter(newMode);
                 }
             } else {
