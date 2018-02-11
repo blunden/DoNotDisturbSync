@@ -57,6 +57,11 @@ public class WearMessageListenerService extends WearableListenerService {
 
                     AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+                    // Avoid unnecessarily triggering extra RINGER_MODE_CHANGED broadcasts
+                    if (newMode == audioManager.getRingerMode()) {
+                        return;
+                    }
+
                     if (newMode == AudioManager.RINGER_MODE_SILENT) {
                         audioManager.setRingerMode(newMode);
                     } else {
@@ -64,6 +69,11 @@ public class WearMessageListenerService extends WearableListenerService {
                         audioManager.setRingerMode(getNormalRingerMode());
                     }
                 } else {
+                    // Avoid unnecessarily triggering extra RINGER_MODE_CHANGED broadcasts
+                    if (newMode == mNotificationManager.getCurrentInterruptionFilter()) {
+                        return;
+                    }
+
                     // Android Wear's DND modes behave unexpectedly so toggle Alarms Only or Off instead
                     if (newMode != NotificationManager.INTERRUPTION_FILTER_ALL) {
                         newMode = NotificationManager.INTERRUPTION_FILTER_ALARMS;
