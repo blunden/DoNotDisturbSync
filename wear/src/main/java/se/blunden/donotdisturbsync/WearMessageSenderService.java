@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class WearMessageSenderService extends IntentService {
     private static final String TAG = "DndMessageSender";
-    private static final String DND_SYNC_PREFIX = "/wear-dnd-sync";
+    private static final String DND_SYNC_MODE = "/wear-dnd-sync";
     private static final long CONNECTION_TIME_OUT = 10;
 
     static final String ACTION_SEND_MESSAGE = "se.blunden.donotdisturbsync.action.SEND_MESSAGE";
@@ -80,7 +80,7 @@ public class WearMessageSenderService extends IntentService {
 
         // Send the Do Not Disturb mode message to all devices (nodes)
         for (Node node : nodes.getNodes()) {
-            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), DND_SYNC_PREFIX, mode.getBytes()).await();
+            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), DND_SYNC_MODE, mode.getBytes()).await();
 
             if (!result.getStatus().isSuccess()){
                 Log.e(TAG, "Failed to send message to " + node.getDisplayName());

@@ -25,6 +25,8 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -78,5 +80,24 @@ public class MainActivity extends AppCompatActivity {
                 .create();
 
         dialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Add the items to the action bar
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_settings:
+                Intent launchSettings = new Intent(this, SettingsActivity.class);
+                startActivity(launchSettings);
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

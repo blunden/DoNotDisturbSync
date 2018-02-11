@@ -28,19 +28,18 @@ import android.util.Log;
 public class DNDStatusChangedReceiver extends BroadcastReceiver {
     private static final String TAG = "DndStatusReceiver";
 
-    // Toggle between sending the ringer mode or the interrupt filter mode
-    private static final boolean SEND_RINGER_MODE = true;
-
     private Context mContext;
+    private SharedPreferences mPreferences;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         mContext = context;
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (intent.getAction().equals(AudioManager.RINGER_MODE_CHANGED_ACTION)) {
             Log.d(TAG, "Received a RINGER_MODE_CHANGED");
 
-            if (SEND_RINGER_MODE) {
+            if (mPreferences.getBoolean("use_ringer_mode", true)) {
                 AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
                 int deviceRingerMode = audioManager.getRingerMode();
@@ -96,8 +95,6 @@ public class DNDStatusChangedReceiver extends BroadcastReceiver {
     }
 
     private void saveNormalRingerMode(int ringerMode) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-        sharedPreferences.edit().putInt("normalMode", ringerMode).apply();
+        mPreferences.edit().putInt("normalMode", ringerMode).apply();
     }
 }

@@ -34,12 +34,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class WearMessageSenderService extends IntentService {
     private static final String TAG = "DndMessageSender";
-    private static final String DND_SYNC_PREFIX = "/wear-dnd-sync";
+    private static final String DND_SYNC_MODE = "/wear-dnd-sync";
+    private static final String DND_SYNC_SETTING = "/wear-dnd-sync-setting";
     private static final long CONNECTION_TIME_OUT = 10;
 
     static final String ACTION_SEND_MESSAGE = "se.blunden.donotdisturbsync.action.SEND_MESSAGE";
     static final String EXTRA_RINGER_MODE = "se.blunden.donotdisturbsync.extra.RINGER_MODE";
     static final String EXTRA_DND_MODE = "se.blunden.donotdisturbsync.extra.DND_MODE";
+    static final String EXTRA_SETTING_USE_RINGER_MODE = "se.blunden.donotdisturbsync.extra.USE_RINGER_MODE";
 
     GoogleApiClient mGoogleApiClient;
 
@@ -54,11 +56,14 @@ public class WearMessageSenderService extends IntentService {
             if (ACTION_SEND_MESSAGE.equals(action)) {
                 final String deviceRingerMode = intent.getStringExtra(EXTRA_RINGER_MODE);
                 final String deviceDndMode = intent.getStringExtra(EXTRA_DND_MODE);
+                final String useRingerMode = intent.getStringExtra(EXTRA_SETTING_USE_RINGER_MODE);
 
                 if (deviceRingerMode != null) {
-                    handleActionSendMessage(deviceRingerMode);
+                    handleActionSendMessage(deviceRingerMode, DND_SYNC_MODE);
                 } else if (deviceDndMode != null) {
-                    handleActionSendMessage(deviceDndMode);
+                    handleActionSendMessage(deviceDndMode, DND_SYNC_MODE);
+                } else if (useRingerMode != null) {
+                    handleActionSendMessage(useRingerMode, DND_SYNC_SETTING);
                 }
             }
         }
@@ -67,7 +72,7 @@ public class WearMessageSenderService extends IntentService {
     /**
      * Handle the message sending action in the provided background thread.
      */
-    private void handleActionSendMessage(String mode) {
+    private void handleActionSendMessage(String message, String path) {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .build();
@@ -80,12 +85,12 @@ public class WearMessageSenderService extends IntentService {
 
         // Send the Do Not Disturb mode message to all devices (nodes)
         for (Node node : nodes.getNodes()) {
-            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), DND_SYNC_PREFIX, mode.getBytes()).await();
+            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), path, message.getBytes()).await();
 
             if (!result.getStatus().isSuccess()){
                 Log.e(TAG, "Failed to send message to " + node.getDisplayName());
             } else {
-                Log.i(TAG, "Successfully sent message " + mode + " to " + node.getDisplayName());
+                Log.i(TAG, "Successfully sent message " + message + " to " + node.getDisplayName());
             }
         }
 

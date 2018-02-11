@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="basic_settings_category"
+        android:title="@string/settings_category_basic_settings">
+
+        <SwitchPreference
+            android:key="use_ringer_mode"
+            android:title="@string/settings_use_ringer_mode_title"
+            android:summaryOn="@string/settings_use_ringer_mode_on_description"
+            android:summaryOff="@string/settings_use_ringer_mode_off_description"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

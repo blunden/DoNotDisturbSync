@@ -53,6 +53,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/activity_settings_title"
+            android:parentActivityName=".MainActivity" />
+
     </application>
 
 </manifest>

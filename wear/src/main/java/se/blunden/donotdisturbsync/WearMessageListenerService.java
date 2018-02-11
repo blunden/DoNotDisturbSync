@@ -28,18 +28,20 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 public class WearMessageListenerService extends WearableListenerService {
     private static final String TAG = "DndSyncListener";
-    private static final String DND_SYNC_PREFIX = "/wear-dnd-sync";
+    private static final String DND_SYNC_MODE = "/wear-dnd-sync";
+    private static final String DND_SYNC_SETTING = "/wear-dnd-sync-setting";
 
-    // Toggle between sending the ringer mode or the interrupt filter mode
-    private static final boolean SEND_RINGER_MODE = true;
+    private SharedPreferences mPreferences;
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        if (messageEvent.getPath().equalsIgnoreCase(DND_SYNC_PREFIX)) {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (messageEvent.getPath().equalsIgnoreCase(DND_SYNC_MODE)) {
             // Read the received ringer or dnd mode and convert it back to an integer
             int newMode = Integer.parseInt(new String(messageEvent.getData()));
 
-            if (SEND_RINGER_MODE) {
+            if (mPreferences.getBoolean("use_ringer_mode", true)) {
                 Log.d(TAG, "Received new ringer mode " + newMode + " from source " + messageEvent.getSourceNodeId());
             } else {
                 Log.d(TAG, "Received new dnd mode " + newMode + " from source " + messageEvent.getSourceNodeId());
@@ -50,7 +52,7 @@ public class WearMessageListenerService extends WearableListenerService {
             // Check if the notification policy access has been granted for the app
             // This is needed to set modes that affect Do Not Disturb in Android N
             if (mNotificationManager.isNotificationPolicyAccessGranted()) {
-                if (SEND_RINGER_MODE) {
+                if (mPreferences.getBoolean("use_ringer_mode", true)) {
                     Log.d(TAG, "Attempting to set ringer mode " + newMode);
 
                     AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -69,14 +71,19 @@ public class WearMessageListenerService extends WearableListenerService {
             } else {
                 Log.d(TAG, "App is not allowed to change Do Not Disturb mode without applying workaround");
             }
+        } else if (messageEvent.getPath().equalsIgnoreCase(DND_SYNC_SETTING)) {
+            // Read the received setting and convert it back to a boolean
+            boolean newUseRingerModeValue = Boolean.valueOf(new String(messageEvent.getData()));
+
+            Log.d(TAG, "Received new useRingerMode value: " + newUseRingerModeValue + " from source " + messageEvent.getSourceNodeId());
+
+            mPreferences.edit().putBoolean("use_ringer_mode", newUseRingerModeValue).apply();
         } else {
             super.onMessageReceived(messageEvent);
         }
     }
 
     private int getNormalRingerMode() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        return sharedPreferences.getInt("normalMode", 1);
+        return mPreferences.getInt("normalMode", 1);
     }
 }
