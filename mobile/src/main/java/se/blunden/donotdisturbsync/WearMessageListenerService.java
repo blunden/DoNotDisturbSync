@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 blunden
+ * Copyright (C) 2017-2022 blunden
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -40,60 +39,36 @@ public class WearMessageListenerService extends WearableListenerService {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (messageEvent.getPath().equalsIgnoreCase(DND_SYNC_MODE)) {
-            // Read the received ringer or dnd mode and convert it back to an integer
+            // Read the received DND mode and convert it back to an integer
             int newMode = Integer.parseInt(new String(messageEvent.getData()));
 
-            if (mPreferences.getBoolean("use_ringer_mode", false)) {
-                Log.d(TAG, "Received new ringer mode " + newMode + " from source " + messageEvent.getSourceNodeId());
-            } else {
-                Log.d(TAG, "Received new dnd mode " + newMode + " from source " + messageEvent.getSourceNodeId());
-            }
+            Log.d(TAG, "Received new DND mode " + newMode + " from source " + messageEvent.getSourceNodeId());
 
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             // Check if the notification policy access has been granted for the app
-            // This is needed to set modes that affect Do Not Disturb in Android N
+            // This is needed to set modes that affect Do Not Disturb in Android N or later
             if (mNotificationManager.isNotificationPolicyAccessGranted() || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                if (mPreferences.getBoolean("use_ringer_mode", false)) {
-                    Log.d(TAG, "Attempting to set ringer mode " + newMode);
-
-                    AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-                    // Avoid unnecessarily triggering extra RINGER_MODE_CHANGED broadcasts
-                    if (newMode == audioManager.getRingerMode()) {
-                        return;
-                    }
-
-                    if (newMode == AudioManager.RINGER_MODE_SILENT) {
-                        audioManager.setRingerMode(newMode);
-                    } else {
-                        // Set the saved "normal" value
-                        audioManager.setRingerMode(getNormalRingerMode());
-                    }
-                } else {
-                    // Avoid unnecessarily triggering extra RINGER_MODE_CHANGED broadcasts
-                    if (newMode == mNotificationManager.getCurrentInterruptionFilter()) {
-                        return;
-                    }
-
-                    if (newMode < 1) {
-                        Log.i(TAG, "Received an invalid notification interruption filter: " + newMode);
-                        return;
-                    }
-
-                    // Android Wear's DND modes behave unexpectedly so toggle user preferred mode or off instead
-                    if (newMode != NotificationManager.INTERRUPTION_FILTER_ALL) {
-                        newMode = Integer.parseInt(mPreferences.getString("preferred_phone_dnd_mode",
-                                String.valueOf(NotificationManager.INTERRUPTION_FILTER_ALARMS)));
-                    } else {
-                        newMode = NotificationManager.INTERRUPTION_FILTER_ALL;
-                    }
-
-                    Log.d(TAG, "Attempting to set adjusted dnd mode " + newMode);
-                    mNotificationManager.setInterruptionFilter(newMode);
+                // Avoid unnecessarily triggering extra DND mode change events
+                if (newMode == mNotificationManager.getCurrentInterruptionFilter()) {
+                    return;
                 }
+
+                if (newMode < 1) {
+                    Log.i(TAG, "Received an invalid notification interruption filter: " + newMode);
+                    return;
+                }
+
+                // Wear OS's DND modes behave unexpectedly so toggle user preferred mode or off instead
+                if (newMode != NotificationManager.INTERRUPTION_FILTER_ALL) {
+                    newMode = Integer.parseInt(mPreferences.getString("preferred_phone_dnd_mode",
+                            String.valueOf(NotificationManager.INTERRUPTION_FILTER_ALARMS)));
+                }
+
+                Log.d(TAG, "Attempting to set adjusted DND mode " + newMode);
+                mNotificationManager.setInterruptionFilter(newMode);
             } else {
-                Log.i(TAG, "Unable to set new ringer mode due to lack of permissions on device");
+                Log.i(TAG, "Unable to set new DND mode due to lack of permissions on device");
                 Log.i(TAG, "Launching permissions settings activity on the device");
                 Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -108,9 +83,5 @@ public class WearMessageListenerService extends WearableListenerService {
         } else {
             super.onMessageReceived(messageEvent);
         }
-    }
-
-    private int getNormalRingerMode() {
-        return mPreferences.getInt("normalMode", AudioManager.RINGER_MODE_NORMAL);
     }
 }

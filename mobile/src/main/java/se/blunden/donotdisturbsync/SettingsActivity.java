@@ -1,18 +1,25 @@
 package se.blunden.donotdisturbsync;
 
-import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
+    private static final String TAG = "DNDSyncSettings";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,16 +42,6 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void sendUseRingerModeSetting(boolean useRingerMode) {
-        // Build the Intent needed to start the WearMessageSenderService
-        Intent wearMessageSenderServiceIntent = new Intent(this, WearMessageSenderService.class);
-        wearMessageSenderServiceIntent.setAction(WearMessageSenderService.ACTION_SEND_MESSAGE);
-        wearMessageSenderServiceIntent.putExtra(WearMessageSenderService.EXTRA_SETTING_USE_RINGER_MODE,
-                String.valueOf(useRingerMode));
-
-        startService(wearMessageSenderServiceIntent);
     }
 
     public static class SettingsFragment extends PreferenceFragment {
@@ -72,18 +69,42 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
-            final Preference useRingerMode = findPreference("use_ringer_mode");
-            useRingerMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Activity parentActivity = getActivity();
-                    if (parentActivity instanceof SettingsActivity) {
-                        ((SettingsActivity) parentActivity).sendUseRingerModeSetting((Boolean) newValue);
-                    }
+            final Preference dndPermissionStatus = findPreference("dnd_permission_status");
 
-                    return true;
+            if (isDNDPermissionGranted()) {
+                dndPermissionStatus.setSummary(R.string.settings_dnd_permission_granted);
+            } else {
+                dndPermissionStatus.setSummary(R.string.settings_dnd_permission_denied);
+            }
+
+            dndPermissionStatus.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (!isDNDPermissionGranted()) {
+                        Log.i(TAG, "Launching permissions settings activity on the device");
+
+                        Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+
+                        try {
+                            // Some devices may not have this activity it seems
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            Log.e(TAG, "Failed to open the Do Not Disturb access settings");
+                        }
+
+                        return true;
+                    } else {
+                        Toast.makeText(getActivity(), R.string.settings_dnd_permission_granted_toast, Toast.LENGTH_SHORT).show();
+
+                        return true;
+                    }
                 }
             });
+        }
+
+        private boolean isDNDPermissionGranted() {
+            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            return notificationManager.isNotificationPolicyAccessGranted();
         }
     }
 }

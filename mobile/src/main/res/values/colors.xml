@@ -5,4 +5,6 @@
     <color name="colorPrimaryLight">#CFD8DC</color>
     <color name="colorAccent">#00BCD4</color>
     <color name="colorDivider">#BDBDBD</color>
+
+    <color name="ic_launcher_background">#455A64</color>
 </resources>

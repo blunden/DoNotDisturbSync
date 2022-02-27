@@ -12,7 +12,7 @@ as a notification listener **on the watch** by running the following commands:
 ## Wear OS 2.x/3.x instructions (credit to rhaeus on XDA for finding the new command):
 
 ```sh
-$ adb shell cmd notification allow_listener se.blunden.donotdisturbsync/se.blunden.donotdisturbsync.DummyNotificationListener
+$ adb shell cmd notification allow_listener se.blunden.donotdisturbsync/se.blunden.donotdisturbsync.DNDSyncNotificationService
 ```
 
 ## Android Wear 2.0 instructions:
@@ -20,12 +20,12 @@ $ adb shell cmd notification allow_listener se.blunden.donotdisturbsync/se.blund
 ```sh
 $ adb shell
 
-$ settings put secure enabled_notification_listeners com.google.android.wearable.app/com.google.android.clockwork.stream.NotificationCollectorService:se.blunden.donotdisturbsync/se.blunden.donotdisturbsync.DummyNotificationListener
+$ settings put secure enabled_notification_listeners com.google.android.wearable.app/com.google.android.clockwork.stream.NotificationCollectorService:se.blunden.donotdisturbsync/se.blunden.donotdisturbsync.DNDSyncNotificationService
 ```
 
 **NOTE (Only applies to Android Wear):** If you have already manually added other notification listeners
 on your watch, you need to instead read the current value and then set it
-again with *:se.blunden.donotdisturbsync/se.blunden.donotdisturbsync.DummyNotificationListener*
+again with *:se.blunden.donotdisturbsync/se.blunden.donotdisturbsync.DNDSyncNotificationService*
 added.
 
 [Play Store](https://play.google.com/store/apps/details?id=se.blunden.donotdisturbsync)

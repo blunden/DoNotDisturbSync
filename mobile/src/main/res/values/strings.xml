@@ -7,6 +7,7 @@
     <string name="error_no_permission_activity">Failed to open the Do Not Disturb Access settings. Please enable the permission manually.</string>
     <string name="activity_settings_title">Settings</string>
     <string name="action_settings">Settings</string>
+    <string name="activity_permission_status_granted">Permission: Granted</string>
 
     <string name="settings_category_phone_settings">Phone settings</string>
     <string name="settings_category_debug_settings">Debug settings</string>
@@ -15,5 +16,8 @@
     <string name="settings_use_ringer_mode_off_description">Set DND mode by changing Notification filter (default)</string>
     <string name="settings_preferred_dnd_mode_title">Preferred Do Not Disturb mode</string>
     <string name="settings_preferred_dnd_mode_summary">Set phone to %1$s mode when Do Not Disturb is toggled on the watch</string>
+    <string name="settings_dnd_permission_granted">Status: Granted</string>
+    <string name="settings_dnd_permission_denied">Status: Not granted</string>
+    <string name="settings_dnd_permission_granted_toast">Permission has already been granted</string>
 
 </resources>

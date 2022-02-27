@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 blunden
+ * Copyright (C) 2017-2022 blunden
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,23 @@
 
 package se.blunden.donotdisturbsync;
 
+import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "DndSync";
@@ -38,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button permissionButton = (Button) findViewById(R.id.button_permission);
+        updateDNDPermissionStatus();
+
+        Button permissionButton = findViewById(R.id.button_permission);
         permissionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private void showPermissionGrantingSettings() {
         Log.i(TAG, "Launching permissions settings activity on the device");
 
-        Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
 
         try {
             // Some devices may not have this activity it seems
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showNeutralDialog(@android.support.annotation.StringRes int messageResId) {
+    private void showNeutralDialog(@androidx.annotation.StringRes int messageResId) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage(messageResId)
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -80,6 +86,20 @@ public class MainActivity extends AppCompatActivity {
                 .create();
 
         dialog.show();
+    }
+
+    private void updateDNDPermissionStatus() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Button permissionButton = findViewById(R.id.button_permission);
+        TextView permissionStatusText = findViewById(R.id.permission_status_text);
+
+        if (notificationManager.isNotificationPolicyAccessGranted()) {
+            permissionButton.setVisibility(View.GONE);
+            permissionStatusText.setVisibility(View.VISIBLE);
+        } else {
+            permissionButton.setVisibility(View.VISIBLE);
+            permissionStatusText.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
