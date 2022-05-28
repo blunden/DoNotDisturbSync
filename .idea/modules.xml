@@ -4,7 +4,13 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DoNotDisturbSync.iml" filepath="$PROJECT_DIR$/DoNotDisturbSync.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile/DoNotDisturbSync.mobile.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile/DoNotDisturbSync.mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile/DoNotDisturbSync.mobile.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile/DoNotDisturbSync.mobile.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile/DoNotDisturbSync.mobile.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile/DoNotDisturbSync.mobile.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile/DoNotDisturbSync.mobile.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile/DoNotDisturbSync.mobile.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wear/DoNotDisturbSync.wear.iml" filepath="$PROJECT_DIR$/.idea/modules/wear/DoNotDisturbSync.wear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wear/DoNotDisturbSync.wear.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/wear/DoNotDisturbSync.wear.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wear/DoNotDisturbSync.wear.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wear/DoNotDisturbSync.wear.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wear/DoNotDisturbSync.wear.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/wear/DoNotDisturbSync.wear.unitTest.iml" />
     </modules>
   </component>
 </project>
