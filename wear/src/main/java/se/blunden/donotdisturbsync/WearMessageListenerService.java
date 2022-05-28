@@ -50,11 +50,6 @@ public class WearMessageListenerService extends WearableListenerService {
                     return;
                 }
 
-                // Wear OS's DND modes behave unexpectedly so toggle Alarms Only or Off instead
-                if (newMode != NotificationManager.INTERRUPTION_FILTER_ALL) {
-                    newMode = NotificationManager.INTERRUPTION_FILTER_ALARMS;
-                }
-
                 Log.d(TAG, "Attempting to set adjusted DND mode " + newMode);
                 mNotificationManager.setInterruptionFilter(newMode);
             } else {
