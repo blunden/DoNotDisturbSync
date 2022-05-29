@@ -29,6 +29,7 @@ import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -64,45 +65,90 @@ public class DNDSyncNotificationService extends NotificationListenerService {
     }
 
     private void sendDNDSyncMessage(int dndMode) {
-        Log.i(TAG, "Syncing new DND mode " + dndMode +" to nearby paired devices");
+        Log.i(TAG, "Syncing new DND mode " + dndMode + " to nearby paired devices");
 
-        // Search for compatible devices
-        CapabilityInfo capabilityInfo;
-        try {
-            capabilityInfo = Tasks.await(Wearable.getCapabilityClient(this)
-                    .getCapability(DND_SYNC_CAPABILITY, CapabilityClient.FILTER_REACHABLE));
-        } catch (InterruptedException e) {
-            Log.e(TAG, "InterruptedException when searching for compatible reachable devices");
-            e.printStackTrace();
-            return;
-        } catch (ExecutionException e) {
-            Log.e(TAG, "ExecutionException when searching for compatible reachable devices");
-            e.printStackTrace();
-            return;
-        }
+        // Attempt to send the DND sync message to all devices, regardless of advertised capability.
+        // This should be disabled after the new watch app has been on the Play Store for a while,
+        // but is needed in order to avoid breaking compatibility with the old watch app during the
+        // Play Store review process.
+        boolean fallbackMode = true;
 
-        // Send the DND Sync message to all reachable devices with the app installed,
-        // i.e. an app with a matching capability string defined.
-        Set<Node> connectedNodes = capabilityInfo.getNodes();
-        if (connectedNodes.isEmpty()) {
-            Log.i(TAG, "No device with DND sync capability found");
+        if (fallbackMode) {
+            try {
+                List<Node> connectedUnfilteredNodes = Tasks.await(Wearable.getNodeClient(this).getConnectedNodes());
+
+                Log.d(TAG, "Number of connected nodes: " + connectedUnfilteredNodes.size());
+
+                if (connectedUnfilteredNodes.isEmpty()) {
+                    Log.i(TAG, "No connected device found");
+                } else {
+                    for (Node node : connectedUnfilteredNodes) {
+                        if (node.isNearby()) {
+                            Wearable.getMessageClient(this)
+                                    .sendMessage(node.getId(), DND_SYNC_MODE, String.valueOf(dndMode).getBytes())
+                                    .addOnSuccessListener(new OnSuccessListener<Integer>() {
+                                        @Override
+                                        public void onSuccess(Integer integer) {
+                                            Log.d(TAG, "Successfully sent sync message to device with name: " + node.getDisplayName());
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "Failed to send sync message to device with name: " + node.getDisplayName());
+                                        }
+                                    });
+                        }
+                    }
+                }
+            } catch (ExecutionException e) {
+                Log.e(TAG, "InterruptedException when searching for reachable devices");
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                Log.e(TAG, "ExecutionException when searching for reachable devices");
+                e.printStackTrace();
+            }
         } else {
-            for (Node node : connectedNodes) {
-                if (node.isNearby()) {
-                    Wearable.getMessageClient(this)
-                            .sendMessage(node.getId(), DND_SYNC_MODE, String.valueOf(dndMode).getBytes())
-                            .addOnSuccessListener(new OnSuccessListener<Integer>() {
-                                @Override
-                                public void onSuccess(Integer integer) {
-                                    Log.d(TAG, "Successfully sent sync message to device with id: " + node.getId());
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "Failed to send sync message to device with id: " + node.getId());
-                                }
-                            });
+            // Search for compatible devices
+            CapabilityInfo capabilityInfo;
+            try {
+                capabilityInfo = Tasks.await(Wearable.getCapabilityClient(this)
+                        .getCapability(DND_SYNC_CAPABILITY, CapabilityClient.FILTER_REACHABLE));
+            } catch (InterruptedException e) {
+                Log.e(TAG, "InterruptedException when searching for compatible reachable devices");
+                e.printStackTrace();
+                return;
+            } catch (ExecutionException e) {
+                Log.e(TAG, "ExecutionException when searching for compatible reachable devices");
+                e.printStackTrace();
+                return;
+            }
+
+            // Send the DND Sync message to all reachable devices with the app installed,
+            // i.e. an app with a matching capability string defined.
+            Set<Node> connectedNodes = capabilityInfo.getNodes();
+            Log.d(TAG, "Number of connected devices with DND sync capability: " + connectedNodes.size());
+
+            if (connectedNodes.isEmpty()) {
+                Log.i(TAG, "No device with DND sync capability found");
+            } else {
+                for (Node node : connectedNodes) {
+                    if (node.isNearby()) {
+                        Wearable.getMessageClient(this)
+                                .sendMessage(node.getId(), DND_SYNC_MODE, String.valueOf(dndMode).getBytes())
+                                .addOnSuccessListener(new OnSuccessListener<Integer>() {
+                                    @Override
+                                    public void onSuccess(Integer integer) {
+                                        Log.d(TAG, "Successfully sent sync message to device with name: " + node.getDisplayName());
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "Failed to send sync message to device with name: " + node.getDisplayName());
+                                    }
+                                });
+                    }
                 }
             }
         }
