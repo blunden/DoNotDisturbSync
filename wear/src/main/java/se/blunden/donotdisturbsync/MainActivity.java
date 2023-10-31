@@ -21,11 +21,16 @@ import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.core.splashscreen.SplashScreen;
+
 public class MainActivity extends Activity {
     private static final String TAG = "DndSync";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Handle the splash screen transition.
+        SplashScreen.installSplashScreen(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

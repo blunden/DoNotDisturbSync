@@ -24,5 +24,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.android.support:wearable:2.9.0'
     implementation 'com.google.android.gms:play-services-wearable:18.1.0'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
     compileOnly 'com.google.android.wearable:wearable:2.9.0'
 }
