@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wearable.view.BoxInsetLayout
+<androidx.wear.widget.BoxInsetLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/watch_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
+    android:padding="5dp"
+    android:background="@android:color/black"
     tools:context="se.blunden.donotdisturbsync.MainActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        app:layout_box="all">
+        android:orientation="vertical"
+        app:layout_boxedEdges="all">
 
         <TextView
             android:id="@+id/info_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="5dp"
+            android:textColor="@android:color/white"
             android:text="@string/activity_info" />
 
-    </ScrollView>
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.IconButton.Filled"
+            android:id="@+id/button_show_instructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:text="@string/button_instructions"
+            app:backgroundTint="@color/colorAccent"
+            app:icon="@drawable/open_on_phone"
+            app:iconTint="@android:color/white" />
 
-</android.support.wearable.view.BoxInsetLayout>
+    </LinearLayout>
+
+</androidx.wear.widget.BoxInsetLayout>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.App" parent="@android:style/Theme.DeviceDefault" />
+    <style name="Theme.App" parent="@style/Theme.Material3.Dark" />
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <!-- Set the splash screen background to black -->

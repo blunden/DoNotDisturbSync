@@ -17,11 +17,25 @@
 package se.blunden.donotdisturbsync;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.pm.PackageManager;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.splashscreen.SplashScreen;
+import androidx.wear.activity.ConfirmationActivity;
+import androidx.wear.remote.interactions.RemoteActivityHelper;
+
+import com.google.android.material.button.MaterialButton;
+import com.google.common.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends Activity {
     private static final String TAG = "DndSync";
@@ -34,14 +48,54 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Hide the launcher icon since users don't need to launch this anymore
-        //hideLauncherIcon();
-        //Log.i(TAG, "Hiding the app icon from the launcher since it is no longer needed");
+        MaterialButton showInstructionsButton = findViewById(R.id.button_show_instructions);
+        showInstructionsButton.setOnClickListener(view -> {
+            Intent showInstructionsIntent = new Intent(Intent.ACTION_VIEW)
+                    .addCategory(Intent.CATEGORY_BROWSABLE)
+                    .setData(Uri.parse("https://github.com/blunden/DoNotDisturbSync/blob/master/README.md"));
+
+            Executor executor = Executors.newSingleThreadExecutor();
+            RemoteActivityHelper remoteActivityHelper = new RemoteActivityHelper(this, executor);
+            ListenableFuture<Void> result = remoteActivityHelper.startRemoteActivity(showInstructionsIntent);
+
+            // Should really be handled by Futures.addCallback(...) but the onSuccess or onFailure
+            // callbacks are seemingly never executed. Let's just assume it was successful to show
+            // the animation and message.
+            result.addListener(() -> {
+                try {
+                    result.get();
+                } catch(Exception e) {
+                    Toast.makeText(this, "Failed to open link on companion phone", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Failed to open link on companion phone");
+                }
+            }, executor);
+
+            Intent confirmationIntent = new Intent(getApplicationContext(), ConfirmationActivity.class)
+                    .putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.OPEN_ON_PHONE_ANIMATION)
+                    .putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.instruction_continue_on_phone));
+            try {
+                startActivity(confirmationIntent);
+            } catch (Exception e) {
+                Toast.makeText(this, "Failed to open link on companion phone", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Failed to start confirmation activity");
+            }
+        });
     }
 
-    private void hideLauncherIcon() {
-        PackageManager p = getPackageManager();
-        ComponentName componentName = new ComponentName(this, MainActivity.class);
-        p.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+    @Override
+    public void onResume() {
+        super.onResume();
+        updatePermissionStatus();
+    }
+
+    private void updatePermissionStatus() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        TextView activityInfoText = findViewById(R.id.info_text);
+        MaterialButton showInstructionsButton = findViewById(R.id.button_show_instructions);
+
+        if (notificationManager.isNotificationPolicyAccessGranted()) {
+            showInstructionsButton.setVisibility(View.GONE);
+            activityInfoText.setText(R.string.activity_info_permission_granted);
+        }
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <color name="ic_launcher_background">#455A64</color>
+    <color name="colorAccent">#00BCD4</color>
 </resources>
