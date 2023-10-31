@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 
 public class MainActivity extends Activity {
     private static final String TAG = "DndSync";
@@ -31,8 +30,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // Hide the launcher icon since users don't need to launch this anymore
-        hideLauncherIcon();
-        Log.i(TAG, "Hiding the app icon from the launcher since it is no longer needed");
+        //hideLauncherIcon();
+        //Log.i(TAG, "Hiding the app icon from the launcher since it is no longer needed");
     }
 
     private void hideLauncherIcon() {
