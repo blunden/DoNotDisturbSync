@@ -9,6 +9,7 @@ android {
         targetSdkVersion 34
         versionCode 7
         versionName "1.4"
+        wearAppUnbundled true
     }
     buildTypes {
         release {
