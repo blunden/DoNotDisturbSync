@@ -18,11 +18,9 @@ package se.blunden.donotdisturbsync;
 
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -51,12 +49,6 @@ public class MainActivity extends AppCompatActivity {
                 showPermissionGrantingSettings();
             }
         });
-    }
-
-    private void hideLauncherIcon() {
-        PackageManager p = getPackageManager();
-        ComponentName componentName = new ComponentName(this, MainActivity.class);
-        p.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
     private void showPermissionGrantingSettings() {
