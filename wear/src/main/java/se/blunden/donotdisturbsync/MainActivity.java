@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +40,7 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends Activity {
     private static final String TAG = "DndSync";
+    private static final float FACTOR = 0.146467f; // From BoxInsetLayout ((1 - sqrt(2)/2)/2)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,9 @@ public class MainActivity extends Activity {
                 Log.e(TAG, "Failed to start confirmation activity");
             }
         });
+
+        // Adjust insets for round watches
+        adjustInsets();
     }
 
     @Override
@@ -96,6 +101,13 @@ public class MainActivity extends Activity {
         if (notificationManager.isNotificationPolicyAccessGranted()) {
             showInstructionsButton.setVisibility(View.GONE);
             activityInfoText.setText(R.string.activity_info_permission_granted);
+        }
+    }
+
+    private void adjustInsets() {
+        if (getResources().getConfiguration().isScreenRound()) {
+            int inset = (int) (FACTOR * Resources.getSystem().getDisplayMetrics().widthPixels);
+            findViewById(R.id.watch_content_view).setPadding(inset, inset, inset, inset);
         }
     }
 }

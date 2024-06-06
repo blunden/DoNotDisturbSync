@@ -2,7 +2,7 @@
     <string name="app_name">Do Not Disturb Sync</string>
     <string name="activity_info">To work properly, the app requires a special permission granted via ADB.</string>
     <string name="activity_info_permission_granted">You have successfully granted the permission on your watch!\n\nDo Not Disturb state should now synchronize.</string>
-    <string name="button_instructions">Instructions</string>
+    <string name="button_instructions">Guide</string>
     <string name="instruction_continue_on_phone">Continue reading on your phone</string>
 
 </resources>
